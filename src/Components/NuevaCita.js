@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import uuid from 'uuid';
 class NuevaCita extends Component {
     state = { 
         cita: {
@@ -11,6 +11,30 @@ class NuevaCita extends Component {
         }
 
      }
+
+     handleChange = e => {
+        this.setState({
+            cita: {
+                ...this.state.cita,
+                [e.target.name] : e.target.value
+            }
+        });
+     }
+     handleSubmit = e => {
+         e.preventDefault();
+         const {mascota, propietario, fecha, hora, sintomas} = this.state.cita;
+         if(mascota === '' || propietario === '' || fecha === '' || hora === '' || sintomas === ''){
+             this.setState({
+                error: true
+             });
+             return;
+         }
+
+         const nuevaCita = {...this.state.cita};
+         nuevaCita.id = uuid();
+
+         this.props.crearNuevaCita(nuevaCita);
+     }
     render() { 
         return ( 
             <div className="card mt-5 py-5">
@@ -18,7 +42,7 @@ class NuevaCita extends Component {
                     <h2 className="card-title text-center mb-5">
                         Llena el formulario para crear la cita
                     </h2>
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
                         <div className="form-group row">
                             <label className="col-sm-4 col-lg-2 col-form-label">Nombre Mascota</label>
                             <div className="col-sm-8 col-lg-10">
@@ -27,6 +51,8 @@ class NuevaCita extends Component {
                                     className="form-control"
                                     placeholder="Nombre mascota"
                                     name="mascota"
+                                    onChange={this.handleChange}
+                                    value={this.state.cita.mascota}
                                 />
                             </div>
                         </div>
@@ -39,6 +65,8 @@ class NuevaCita extends Component {
                                     className="form-control"
                                     placeholder="Nombre due;o mascota"
                                     name="propietario"
+                                    onChange={this.handleChange}
+                                    value={this.state.cita.propietario}
                                 />
                             </div>
                         </div>
@@ -50,6 +78,8 @@ class NuevaCita extends Component {
                                     type="date"
                                     className="form-control"
                                     name="fecha"
+                                    onChange={this.handleChange}
+                                    value={this.state.cita.fecha}
                                 />
                             </div>
 
@@ -59,6 +89,8 @@ class NuevaCita extends Component {
                                     type="time"
                                     className="form-control"
                                     name="hora"
+                                    onChange={this.handleChange}
+                                    value={this.state.cita.hora}
                                 />
                             </div>
                         </div>
@@ -70,6 +102,8 @@ class NuevaCita extends Component {
                                     className="form-control"
                                     name="sintomas"
                                     placeholder="Describe los sintomas"
+                                    onChange={this.handleChange}
+                                    value={this.state.cita.sintomas}
                                     >
                                 </textarea>
                             </div>
